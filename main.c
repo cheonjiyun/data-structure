@@ -6,6 +6,14 @@ int size;
 char* numbers[100]; // 최대 크기 100으로 배열포인터 선언
 
 
+int find(char* val) {
+	for (int i = 0; i < size; i++) {
+		if (strcmp(numbers[i], val) == 0)
+			return i; // 찾으면 인덱스 반환
+	}
+	return -1; // 못찾으면 -1
+}
+
 char* get_next() {
 	char buf[20];
 	scanf_s("%s", buf, 20);
@@ -67,10 +75,10 @@ void run_menu() {
 	int menu;
 	while (1) {
 		printf("\n(1) 끝에 값 추가 \n(2) pos번째에 값 추가\n");
-		printf("(3) pos번째 삭제 \n(4) pos번째 값 변경 \n(5) 종료 ");
+		printf("(3) pos번째 삭제 \n(4) pos번째 값 변경 \n(5) val값 검색 \n (6)종료");
 		printf(" 메뉴선택 => ");
 		scanf_s("%d", &menu);
-		if (menu >= 5) break;
+		if (menu >= 6) break;
 		switch (menu) {
 		case 1:
 			printf("끝에 추가할 값: ");
@@ -92,6 +100,15 @@ void run_menu() {
 			scanf_s("%d", &pos);
 			val = update_list(pos, get_next());
 			free(val);
+			break;
+		case 5:
+			printf("찾으려는 값 : ");
+			val = get_next();
+			pos = find(val);
+			if (pos == -1)
+				printf("%s는 없는 값입니다\n", val);
+			else
+				printf("%s는[%d]에 있습니다\n", val, pos);
 			break;
 		default:
 			break;
