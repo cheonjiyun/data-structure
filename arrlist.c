@@ -11,7 +11,7 @@ void print_list(arrlist_t* lp) {
 }
 
 void add_list(arrlist_t* lp, elem_t val) {
-	printf("값 %s를 리스트 맨 끝에 추가합니다.\n", str(val));
+	//printf("값 %s를 리스트 맨 끝에 추가합니다.\n", str(val));
 	lp->array[lp->size++] = val;
 }
 
