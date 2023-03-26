@@ -25,7 +25,7 @@ arrlist_t* remove_redundancy(arrlist_t* lp) {
 			add_list(newlp, get(lp, i));
 		}
 	}
-	
+
 	return newlp;
 }
 
@@ -58,7 +58,7 @@ void copy_list(arrlist_t* aptr, arrlist_t* bptr) {
 arrlist_t* compute_superset(arrlist_t* aptr, arrlist_t* bptr) {
 	arrlist_t* newlp = (arrlist_t*)malloc(sizeof(arrlist_t));
 	init_list(newlp);
-	
+
 	//aprt값을 newlp에 같은 값이 없을 때만 넣음(중복없이)
 	for (int i = 0; i < len(aptr); i++) {
 		if (contains(newlp, get(aptr, i)) == 0) {
@@ -79,9 +79,9 @@ arrlist_t* compute_superset(arrlist_t* aptr, arrlist_t* bptr) {
 void main() {
 	arrlist_t lista, listb;
 	init_list(&lista);
-	input_list(&lista, 20);
+	input_list(&lista, 5);
 	init_list(&listb);
-	input_list(&listb, 20);
+	input_list(&listb, 5);
 	printf("lista: \n"); print_list(&lista);
 	printf("\nlistb: \n"); print_list(&listb);
 	arrlist_t* aptr = remove_redundancy(&lista);
