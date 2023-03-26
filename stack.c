@@ -38,7 +38,7 @@ void init_stack(stack_t* s) {
 // 스택 출력 함수
 void print_stack(stack_t* s) {
 	for (int i = 0; i < s->top; i++)
-		printf("%s", str(s->data[i]));
+		printf("%s ", str(s->data[i]));
 	printf("\n");
 }
 // 스택 해지 함수

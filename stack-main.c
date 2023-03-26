@@ -5,20 +5,23 @@
 #include "stack.h"
 #include "elem.h"
 
-int main(void)
-{
-	
-	stack_t s;
-	
-	init_stack(&s);
-	
-	push(&s, 1);
-	
-	push(&s, 2);
-	
-	push(&s, 3);
-	
-	printf("%s\n", str(pop(&s)));
-	printf("%s\n", str(pop(&s)));
-	printf("%s\n", str(pop(&s)));
+void main() {
+	int rnum;
+	stack_t mystack;
+	init_stack(&mystack);
+	while (1) {
+		rnum = rand() % 100;
+		if (rnum == 0)
+			break;
+		if (rnum < 60) {
+			rnum = rand() % 100;
+			push(&mystack, rnum);
+			printf("push <= %4d\t", rnum);
+		}
+		else {
+			rnum = pop(&mystack);
+			printf("pop = > %4d\t", rnum);
+		}
+		print_stack(&mystack);
+	}
 }
