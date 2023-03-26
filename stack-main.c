@@ -20,7 +20,7 @@ void main() {
 		}
 		else {
 			rnum = pop(&mystack);
-			printf("pop = > %4d\t", rnum);
+			printf("pop  => %4d\t", rnum);
 		}
 		print_stack(&mystack);
 	}

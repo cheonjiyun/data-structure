@@ -2,8 +2,10 @@
 
 #define MAX_STACK_SIZE 100
 typedef int elem_t;
+typedef int element;
 typedef struct {
-	elem_t data[MAX_STACK_SIZE];
+	element* data; // data은 포인터로 정의된다. 
+	int capacity; // 현재 크기
 	int top;
 } stack_t;
 // 함수 전방선언

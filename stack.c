@@ -5,17 +5,19 @@
 #include "stack.h"
 #include "elem.h"
 
-void push(stack_t* s, elem_t e) {
+
+void push(stack_t* s, element item)
+{
 	if (is_full(s)) {
-		fprintf(stderr, "스택 포화 에러\n");
-		return;
+		s->capacity *= 2;
+		s->data = (element*)malloc(s->capacity * sizeof(element));
 	}
-	s->data[(s->top)++] = e;
+	s->data[++(s->top)] = item;
 }
+
 elem_t pop(stack_t* s) {
 	
 	if (is_empty(s)) {
-		
 		fprintf(stderr, "스택 공백 에러\n");
 		exit(1);
 	}
@@ -30,10 +32,12 @@ int is_full(stack_t* s) {
 	return (s->top == MAX_STACK_SIZE);
 }
 // 스택 초기화 함수
-void init_stack(stack_t* s) {
+void init_stack(stack_t* s)
+{
+	s->capacity = 16; // 처음 사이즈는 작게 잡는다 2^4
+	s->data = (element*)malloc(s->capacity * sizeof(element));
 	s->top = 0;
-	for (int i = 0; i < MAX_STACK_SIZE; i++)
-		s->data[i] = 0;
+
 }
 // 스택 출력 함수
 void print_stack(stack_t* s) {
@@ -49,3 +53,10 @@ void free_stack(stack_t* s)
 	s->top = 0;
 }
 // 스택은 초기에 비어있는 상태로 출발하므로 input_stack은 불필요
+
+
+void ReallocExample() {
+	char* buffer = (char*)malloc(4);
+
+	buffer = (char*)realloc(buffer, 8);
+}
