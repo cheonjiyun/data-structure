@@ -1,21 +1,16 @@
 #pragma once
 
+#define MAX_STACK_SIZE 100
 typedef int elem_t;
-typedef int element;
 typedef struct {
-	int capacity; // 창고 용량
-	int recieve_count; // 총입고
-	int release_count; // 총출고
-	int stock; // 재고
+	elem_t data[MAX_STACK_SIZE];
+	int top;
 } stack_t;
 
-// 함수 전방선언
-void init_stack(stack_t* s, int cap);
-void receive(stack_t* s, int count);
-void release(stack_t* s, int count);
-int is_empty(stack_t* s, int count);
-int is_full(stack_t* s, int count);
-void print_stat(stack_t* s);
-
-
-//void free_stack(stack_t* s);
+void push(stack_t* s, elem_t e);
+elem_t pop(stack_t* s);
+int is_empty(stack_t* s);
+int is_full(stack_t* s);
+void init_stack(stack_t* s);
+void print_stack(stack_t* s);
+void free_stack(stack_t* s);

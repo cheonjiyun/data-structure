@@ -5,28 +5,63 @@
 #include "stack.h"
 #include "elem.h"
 
-void main() {
-	stack_t sp;
-	int menu, count, cap;
-	printf("재고관리 서비스에 오신것을 환영합니다 :)\n먼저 창고 총 용량을 입력해주세요.\n\n");
-	printf("총 재고 용량: ");
-	scanf_s("%d", &cap);
-	init_stack(&sp, cap);
-	while (1) {
-		printf("(1) 입고 (2) 출고 (3) 종료... ");
-		scanf_s("%d", &menu);
-		if (menu == 1) {
-			printf("입고 개수: ");
-			scanf_s("%d", &count);
-			receive(&sp, count);
+
+int check_matching(char* in);
+int is_open(char ch);
+int is_cloing(char ch);
+
+int main(void)
+{
+	char input[20];
+	printf(">> ");
+	scanf_s("%s", input, 20);
+	printf("%s 괄호검사 ", input);
+	if (check_matching(input))
+		printf("성공\n", input);
+	else
+		printf("실패\n", input);
+	return 0;
+}
+
+
+int check_matching(char* in) {
+	char ch, open_ch;
+	stack_t mystack;
+	init_stack(&mystack);
+	for (int i = 0; i < strlen(in); i++) {
+		ch = in[i];
+		if (is_open(ch)) {
+			push(&mystack, ch);
 		}
-		else if (menu == 2) {
-			printf("출고 개수: ");
-			scanf_s("%d", &count);
-			release(&sp, count);
+		else if (is_cloing(ch)) {
+			if (is_empty(&mystack))
+				return 0; // 1 닫는 괄호가 많음
+			open_ch = pop(&mystack);
+			if (!matching(open_ch, ch))
+				return 0; // 2 괄호 짝 오류
 		}
-		else break;
-		print_stat(&sp);
+		else {
+			printf("wrong char %c... Bye\n", ch);
+			exit(1);
+		}
+		printf("[%-20s]\t", in + i);
+		print_stack(&mystack, in + (i + 1));
 	}
-	printf("안녕히 가세요 :)");
+	return is_empty(&mystack); // 3 여는 괄호가 많으면 0
+
+
+}
+
+int is_open(char ch) {
+	return ch == '(' || ch == '{' || ch == '[';
+}
+
+int is_cloing(char  ch) {
+	return ch == ')' || ch == '}' || ch == ']';
+}
+
+int matching(char ch, char open_ch) {
+	return (ch == '(' && open_ch == ')')
+		|| (ch == '{' && open_ch == '}')
+		|| (ch == '[' && open_ch == ']');
 }

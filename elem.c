@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "elem.h"
+#include "stack.h"
 
 typedef struct {
 	elem_t array[100]; // 배열 정의
@@ -64,4 +65,3 @@ char* str(elem_t e) {
 void free_elem(elem_t e) {
 
 }
-
