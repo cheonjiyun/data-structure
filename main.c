@@ -1,70 +1,89 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#define MAX_QUEUE_SIZE 10
-typedef int elem_t;
+#include "queue.h"
 typedef struct {
-	int front;
-	int rear;
-	elem_t data[MAX_QUEUE_SIZE];
-} queue_t;
-void init_queue(queue_t* q);
-void enqueue(queue_t* q, elem_t item);
-elem_t dequeue(queue_t* q);
-void queue_print(queue_t* q);
-int is_full(queue_t* q);
-int is_empty(queue_t* q);
+	int id;
+	char name[20];
+	int take;    // 요리 시간
+} oven_t;
+oven_t menus[6] = { // 메뉴 종류
+	{1, "AAA", 5},
+	{2, "BBB", 3},
+	{3, "CCC", 7},
+	{4, "DDD", 4},
+	{5, "EEE", 3},
+	{6, "FFF", 5}
+};
+order_t order_list[10];
+int num_ovens = 6;
+int num_orders;
+queue_t pizzaq_list[6];
+void run_orders();
+void print_logs();
+void print_menus();
+void read_order(order_t* op);
 
-int main(void)
-{
-	int item = 0;
-	queue_t q;
-	init_queue(&q);
-	enqueue(&q, 10); queue_print(&q);
-	enqueue(&q, 20); queue_print(&q);
-	enqueue(&q, 30); queue_print(&q);
-	item = dequeue(&q); queue_print(&q);
-	item = dequeue(&q); queue_print(&q);
-	item = dequeue(&q); queue_print(&q);
-	return 0;
+void main() {
+	print_menus();
+	run_orders();
+	print_logs();
 }
-void init_queue(queue_t* q)
-{
-	q->rear = 0;
-	q->front = 0;
+char outbuf[30];
+char* str(elem_t e) {
+	sprintf_s(outbuf, 30, "[%2d] %2d분", e->id, e->arrived);
+	return outbuf;
 }
-void enqueue(queue_t* q, elem_t item)
+void print_menu(int i)
 {
-	if (is_full(q)) {
-		printf("큐가 포화상태입니다.");
-		return;
+	printf("[%d] %s %d분\n", menus[i].id, menus[i].name,
+		menus[i].take);
+}
+void print_menus() {
+	printf("\n\n====== 메뉴판 ======\n");
+	for (int i = 0; i < num_ovens; i++) {
+		print_menu(i);
 	}
-	q->data[(q->rear)++] = item;
 }
-elem_t dequeue(queue_t* q)
-{
-	if (is_empty(q)) {
-		printf("큐가 공백상태입니다.");
-		return -1;
+
+void run_orders() {
+	printf("주문 개수: ");
+	scanf_s("%d", &num_orders);
+	for (int i = 0; i < num_orders; i++) {
+		read_order(&order_list[i]);
+		int pznum = order_list[i].pizza_num - 1;
+		enqueue(&pizzaq_list[pznum], &order_list[i]);
 	}
-	int item = q->data[(q->front)++];
-	return item;
 }
-void queue_print(queue_t* q)
+void read_order(order_t* op)
 {
-	for (int i = 0; i < MAX_QUEUE_SIZE; i++) {
-		if (i < q->front || i >= q->rear)
-			printf("   | ");
-		else
-			printf("%d | ", q->data[i]);
+	scanf_s("%d %d %d", &op->id, &op->arrived, &op->pizza_num);
+}
+void print_logs() {
+	printf("오븐 별 요리내역\n");
+	for (int i = 0; i < 6; i++) {
+		printf("%s (%d건)\n", menus[i].name, pizzaq_list[i].rear);
+		printf("번호  주문     시작 --- 완료  (대기시간)\n");
+
+		int start_time = 0; // 요리 시작
+		int end_time = 0; // 요리 완료
+		int waiting_time = 0; // 대기 시간
+		for (int j = 0; j < pizzaq_list[i].rear; j++) {
+			elem_t each_order = dequeue(&pizzaq_list[i]); // 주문들 하나하나 뺌
+
+			if (each_order->arrived < end_time) { // 이전 주문이 완료가 안되어있다면
+				waiting_time = end_time - each_order->arrived; // 이전 주문이 완료된 시간 - 주문 시간
+				start_time = end_time; // 이전 주문이 완료된 시간
+				end_time = start_time + menus[i].take; // 시작 시간 + 메뉴의 조리 시간
+			}
+			else { // 쌓인 주문이 없다면
+				waiting_time = 0; // 대기시간 없음
+				start_time = each_order->arrived;
+				end_time = each_order->arrived + menus[i].take;
+			}
+			printf("[%2d]  %2d분      %2d       %2d        (%d분)\n", each_order->id, each_order->arrived, start_time, end_time, waiting_time);
+		}
+		printf("\n");
+
 	}
-	printf("\n");
-}
-int is_full(queue_t* q)
-{
-	return (q->rear == MAX_QUEUE_SIZE);
-}
-int is_empty(queue_t* q)
-{
-	return (q->front == q->rear);
+
 }
